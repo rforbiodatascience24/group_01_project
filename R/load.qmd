@@ -1,0 +1,59 @@
+---
+title: "Load"
+author: 
+  - Rune Daucke 
+  - David Faurdal
+  - Louisa Weisch
+format: html
+editor: visual
+---
+
+```{r}
+#| results: "hide"
+library(tidyverse)
+```
+
+## Download and load data
+
+For ease of running the data is downloaded directly from Gene Expression Omnibus and loaded.
+
+```{r}
+#| results: "hide"
+# Download data
+url <- "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE72nnn/GSE72267/matrix/GSE72267_series_matrix.txt.gz"
+dest_path <- "../data/_raw/GSE72267_series_matrix.txt.gz"
+download.file(url, dest_path, mode = "wb")
+```
+
+```{r}
+# Load and wrangle data
+df <- read_tsv(dest_path, comment = "!") %>%
+  {
+    # the ! comment lines 
+    metadata <- readLines(dest_path)
+    titles <- metadata %>%
+      str_subset("^!Sample_title") %>%
+      str_split("\t", simplify = TRUE) %>%
+      as.vector() %>%
+      .[-1] %>%
+      str_remove_all("\"")
+    
+    # Assign new names to all columns except ID_REF
+    # This replaces the accession with the sample title given in
+    # the "!" comment fields
+    colnames(.)[-1] <- titles
+    control_cols <- select(., matches("control"))
+    pd_cols <- select(., matches("PD"))
+    
+    # Combine relevant columns 
+    bind_cols(select(., ID_REF), control_cols, pd_cols)
+  }
+```
+
+Note: If the loading of the data returns a "The size of the connection buffer was not large enough to fit a line" this can be resolved by running:
+
+```{r}
+#| eval: false
+#| echo: true
+Sys.setenv(VROOM_CONNECTION_SIZE = "500000")
+```
