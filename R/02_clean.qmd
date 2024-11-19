@@ -1,0 +1,44 @@
+---
+title: "02_clean"
+author: 
+  - Rune Daucke 
+  - David Faurdal
+  - Luisa Weisch
+format: html
+editor: visual
+---
+
+## Clean Data
+
+The data loaded in 01_load. It is currently not in a
+
+```{r}
+#| results: "hide"
+library(tidyverse)
+```
+
+```{r}
+df_wide <- read_tsv("../data/01_gene_expression.tsv")
+
+
+df_long <- df_wide |>
+  pivot_longer(
+    cols=-ID_REF,
+    names_to = "Sample",
+    values_to = "Expression"
+  ) |>
+  mutate(
+    Condition = case_when(
+    str_detect(Sample,"control") ~"Control",
+    TRUE ~ "PD")
+  )
+
+
+
+df_tidy <- df_long%>%
+  pivot_wider(
+    names_from = ID_REF,
+    values_from = Expression
+  )
+
+```
