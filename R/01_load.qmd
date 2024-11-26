@@ -35,31 +35,48 @@ download.file(url, dest_path, mode = "wb")
 
 ```{r}
 # Load and wrangle data
-df <- read_tsv(dest_path, comment = "!") %>%
-  {
-    # the ! comment lines 
-    metadata <- readLines(dest_path)
-    titles <- metadata %>%
-      str_subset("^!Sample_title") %>%
-      str_split("\t", simplify = TRUE) %>%
-      as.vector() %>%
-      .[-1] %>%
-      str_remove_all("\"")
-    
-    # Assign new names to all columns except ID_REF
-    # This replaces the accession with the sample title given in
-    # the "!" comment fields
-    colnames(.)[-1] <- titles
-    control_cols <- select(., matches("control"))
-    pd_cols <- select(., matches("PD"))
-    
-    # Combine relevant columns 
-    bind_cols(select(., ID_REF), control_cols, pd_cols)
-  }
+df <- read_tsv(dest_path, comment = "!")
+metadata <- readLines(dest_path)
+
+titles <- metadata %>%
+  str_subset("^!Sample_title") %>%
+  str_split("\t", simplify = TRUE) %>%
+  as.vector() %>%
+  .[-1] %>%
+  str_remove_all("\"")
+
+# Assign new names to all columns except ID_REF
+# This replaces the accession with the sample title given in
+# the "!" comment fields
+colnames(df)[-1] <- titles
+control_cols <- select(df, matches("control"))
+pd_cols <- select(df, matches("PD"))
+
+# Combine relevant columns 
+bind_cols(select(df, ID_REF), control_cols, pd_cols)
+
 
 # write to new load data table
 write_tsv(x = df,
           file="../data/01_gene_expression.tsv")
+
+# Load Metadata
+num_sample_titles <- length(titles)
+
+# Extract all unique feature names
+feature_names <- metadata %>%
+  str_extract("^!\\S+") %>% # Extract the feature name (e.g., "!Sample_title")
+  unique()
+
+# Function to extract metadata for a given feature
+extract_feature <- function(feature, metadata) {
+  metadata %>%
+    str_subset(paste0("^", feature)) %>% # Match the specific feature
+    str_split("\t", simplify = TRUE) %>% # Split into tab-separated values
+    as.vector() %>% # Convert to vector
+    .[-1] %>% # Remove the header
+    str_remove_all("\"") # Remove quotes
+}
 
 ```
 
