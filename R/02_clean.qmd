@@ -10,18 +10,21 @@ editor: visual
 
 ## Clean Data
 
-The data loaded in 01_load. It is currently not in a
+The data loaded in 01_load. It is currently not in a tidy format.
 
 ```{r}
 #| results: "hide"
 library(tidyverse)
+library(annotate)
+library(hgu133a2.db)
+
 ```
 
 ```{r}
 df_wide <- read_tsv("../data/01_gene_expression.tsv")
 
-
-df_long <- df_wide |>
+# Make a tidy long format table
+df_tidy <- df_wide |>
   pivot_longer(
     cols=-ID_REF,
     names_to = "Sample",
@@ -30,14 +33,15 @@ df_long <- df_wide |>
   mutate(
     Condition = case_when(
     str_detect(Sample,"control") ~"Control",
-    TRUE ~ "PD")
-  )
+    TRUE ~ "PD"),
+    gene_name = getSYMBOL(ID_REF,"hgu133a2.db") # convert probe_ID to gene_name
+    ) |>
+  dplyr::select(-ID_REF)
 
 
-
-df_tidy <- df_long%>%
+df_wider <- df_tidy |>
   pivot_wider(
-    names_from = ID_REF,
+    names_from = gene_name,
     values_from = Expression
   )
 
