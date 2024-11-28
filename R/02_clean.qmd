@@ -46,3 +46,37 @@ df_wider <- df_tidy |>
   )
 
 ```
+
+```{r}
+# Add Metdata features
+# Extract all unique feature names
+feature_names <- metadata %>%
+  str_extract("^!\\S+") %>% # Extract the feature name (e.g., "!Sample_title")
+  unique()
+
+# Function to extract metadata for a given feature
+extract_feature <- function(feature, metadata) {
+  metadata %>%
+    str_subset(paste0("^", feature)) %>% # Match the specific feature
+    str_split("\t", simplify = TRUE) %>% # Split into tab-separated values
+    as.vector() %>% # Convert to vector
+    .[-1] %>% # Remove the header
+    str_remove_all("\"") # Remove quotes
+}
+
+# Filter features to include only those with matching number of entries
+filtered_features <- feature_names %>%
+  keep(~ length(extract_feature(.x, metadata)) == num_sample_titles)
+
+# Extract metadata for filtered features
+metadata_table <- map_dfc(filtered_features, ~ {
+  extract_feature(.x, metadata)
+}) %>%
+  set_names(str_remove(filtered_features, "^!")) # Clean feature names
+
+
+# Combine metadata with the main data
+df_combined <- bind_cols(metadata_table, df_tidy)
+
+```
+
