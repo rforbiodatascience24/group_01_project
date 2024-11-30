@@ -1,0 +1,91 @@
+---
+title: "Data Cleaning"
+author: 
+  - Rune Daucke (runda, s165493)
+  - David Faurdal (dalofa)
+  - Luisa Weisch (s233028)
+date: 12/02-2024
+format:
+  html:
+    embed-resources: true
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+## Load Libraries
+
+```{r}
+#| label: load_libraries
+#| eval: TRUE
+#| echo: TRUE
+#| results: hide
+#| message: FALSE
+#| warning: FALSE
+
+library(tidyverse)
+Sys.setenv(VROOM_CONNECTION_SIZE = "500000") #Prevent memory error
+```
+
+## Download and load data
+
+For ease of running the data is downloaded directly from Gene Expression Omnibus and loaded.
+
+```{r}
+#| label: data_loading
+#| eval: TRUE
+#| echo: TRUE
+#| results: hide
+#| message: FALSE
+#| warning: FALSE
+
+# Download data
+url <- "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE72nnn/GSE72267/matrix/GSE72267_series_matrix.txt.gz"
+dest_folder ="../data/_raw"
+dest_path <- "../data/_raw/GSE72267_series_matrix.txt.gz"
+
+# create destination folder if needed
+if (!dir.exists(dest_folder)) {
+  dir.create(dest_folder, recursive = TRUE)}
+
+download.file(url, dest_path, mode = "wb")
+```
+
+Here, the junk headers are removed, and a clean data set is generate.
+
+```{r}
+#| label: data_wrangling
+#| eval: TRUE
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+
+# Load and wrangle data
+df <- read_tsv(dest_path, comment = "!")
+metadata <- readLines(dest_path)
+
+# Removes junk headers
+titles <- metadata %>%
+  str_subset("^!Sample_title") %>%
+  str_split("\t", simplify = TRUE) %>%
+  as.vector() %>%
+  .[-1] %>%
+  str_remove_all("\"")
+
+# Assign new names to all columns except ID_REF
+# This replaces the accession with the sample title given in
+# the "!" comment fields
+colnames(df)[-1] <- titles
+control_cols <- select(df, matches("control"))
+pd_cols <- select(df, matches("PD"))
+
+# Combine relevant columns 
+df_filtered <- bind_cols(select(df, ID_REF), control_cols, pd_cols) %>%
+  filter(!str_detect(ID_REF, "AFFX")) # This removes spiked-in controls
+
+# write to new load data table
+write_tsv(x = df_filtered,
+          file = "../data/01_data_clean.tsv")
+
+print(df_filtered)
+```

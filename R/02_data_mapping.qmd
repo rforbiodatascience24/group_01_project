@@ -1,0 +1,116 @@
+---
+title: "Data Mapping"
+author: 
+  - Rune Daucke (runda, s165493)
+  - David Faurdal (dalofa)
+  - Luisa Weisch (s233028)
+date: 12/02-2024
+format:
+  html:
+    embed-resources: true
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+## Data mapping
+
+The data loaded in 01_load. It is currently not in a tidy format.' The data here is further cleaned and mapped to correct gene names.
+
+```{r}
+#| label: load_libraries_data
+#| eval: TRUE
+#| echo: TRUE
+#| results: hide
+#| message: FALSE
+#| warning: FALSE
+
+library(tidyverse)
+library(annotate)
+library(hgu133a2.db)
+
+df <- read_tsv("../data/01_data_clean.tsv")
+```
+
+Here, the conditions and the genes are mapped to the data
+
+```{r}
+#| label: data_mapping
+#| eval: TRUE
+#| echo: TRUE
+#| results: hide
+#| message: FALSE
+#| warning: FALSE
+
+# Reshape the data and add the conditions
+df_conditon_wide <- df %>%
+  pivot_longer(
+    cols = -c(ID_REF),
+    names_to = "Sample",
+    values_to = "Expression"
+  ) %>%
+  pivot_wider(
+    names_from = ID_REF,
+    values_from = Expression
+  ) %>%
+  mutate(Condition = case_when(
+    str_detect(Sample, "control") ~ "Control",
+    TRUE ~ "PD"
+  )) %>%
+  dplyr::select(Sample, Condition, everything())
+
+# Get the gene probe IDs
+gene_probe_ids <- colnames(df_conditon_wide)[-c(1, 2)]
+
+# Map probe IDs to gene names
+gene_names <- sapply(gene_probe_ids, function(probe_id) {
+  mapped_genes <- ifelse(is.na(probe_id) || probe_id == "", "Unnamed", 
+                         ifelse(is.null(getSYMBOL(probe_id, "hgu133a2.db")), probe_id, getSYMBOL(probe_id, "hgu133a2.db")))
+  return(mapped_genes)
+})
+
+# Ensure no duplicates or missing values in gene names
+gene_names <- make.unique(ifelse(is.na(gene_names), "Unnamed", gene_names))
+
+# Replace the probe IDs with the mapped gene names in the dataframe
+colnames(df_conditon_wide)[-c(1, 2)] <- gene_names
+
+# Order the samples according to name
+control_order <- paste("Blood_healthy_control_", 1:20, sep = "")
+pd_order <- paste("Blood_PD_patient_", 1:41, sep = "")
+all_samples <- c(control_order, pd_order)
+
+# Reshape data to long format again and apply ordering
+df_mapped <- df_conditon_wide %>%
+  pivot_longer(
+    cols = -c(Sample, Condition),
+    names_to = "Gene",
+    values_to = "Expression"
+  ) %>%
+  mutate(
+    Sample = factor(Sample, levels = all_samples))
+
+write_tsv(x = df_mapped,
+          file = "../data/02_data_mapped.tsv")
+```
+
+Here, we plot the distribution to check if normalization is needed
+
+```{r}
+#| label: normalization_check_plot
+#| eval: TRUE
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.width: 8
+#| fig.height: 6
+
+# Create the boxplot to evaluate need for normalization
+ggplot(df_mapped, aes(x = Sample, y = Expression, fill = Condition)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Gene Expression by Samples", x = "Sample", y = "Expression") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggsave("../plots/02_normalization_check.png", width = 8, height = 6, dpi = 600)
+```
