@@ -1,0 +1,29 @@
+---
+title: "Describe"
+author: 
+  - Rune Daucke 
+  - David Faurdal
+  - Luisa Weisch
+format: html
+editor: visual
+---
+
+# Load libraries and data
+```{r}
+library(tidyverse)
+library(viridis)
+source("99_proj_func.R")
+library(dplyr)
+```
+
+```{r}
+df <- read_tsv("../data/03_dat_aug.tsv")
+```
+
+```{r}
+all_genes <- colnames(df) %>% .[- c(1,2,3)] %>% list()
+df_genes <- df %>% dplyr::select(all_of(all_genes))
+```
+
+
+
