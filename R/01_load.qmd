@@ -8,9 +8,13 @@ format: html
 editor: visual
 ---
 
+## Importing necessary libraries 
 ```{r}
 #| results: "hide"
 library(tidyverse)
+source("99_proj_func.R")
+library(dplyr)
+
 ```
 
 ## Download and load data
@@ -32,51 +36,37 @@ if (!dir.exists(dest_folder)) {
 
 download.file(url, dest_path, mode = "wb")
 ```
-
+Next, dataframes are created, containing the reads of specific genes for multiple samples. This dataframe will get saved as 01_dat_load.tsv for further anaylsis.
 ```{r}
 # Load and wrangle data
-df <- read_tsv(dest_path, comment = "!")
+df <- read_tsv(dest_path, comment = "!") %>%
+  as_tibble()
+
 metadata <- readLines(dest_path)
 
-titles <- metadata %>%
-  str_subset("^!Sample_title") %>%
-  str_split("\t", simplify = TRUE) %>%
-  as.vector() %>%
-  .[-1] %>%
-  str_remove_all("\"")
+titles <- extract_feature("!Sample_title", metadata)
 
 # Assign new names to all columns except ID_REF
 # This replaces the accession with the sample title given in
 # the "!" comment fields
 colnames(df)[-1] <- titles
-control_cols <- select(df, matches("control"))
-pd_cols <- select(df, matches("PD"))
+control_cols <- df %>% dplyr::select(matches("control"))
+pd_cols <- df %>% dplyr::select(matches("PD"))
 
 # Combine relevant columns 
-bind_cols(select(df, ID_REF), control_cols, pd_cols)
+bind_cols(dplyr::select(df, ID_REF), control_cols, pd_cols)
 
 
 # write to new load data table
-write_tsv(x = df,
-          file="../data/01_gene_expression.tsv")
+write_tsv(x = df, file="../data/01_dat_load.tsv")
 
 # Load Metadata
 num_sample_titles <- length(titles)
 
 # Extract all unique feature names
 feature_names <- metadata %>%
-  str_extract("^!\\S+") %>% # Extract the feature name (e.g., "!Sample_title")
+  str_extract("^!\\S+") %>%
   unique()
-
-# Function to extract metadata for a given feature
-extract_feature <- function(feature, metadata) {
-  metadata %>%
-    str_subset(paste0("^", feature)) %>% # Match the specific feature
-    str_split("\t", simplify = TRUE) %>% # Split into tab-separated values
-    as.vector() %>% # Convert to vector
-    .[-1] %>% # Remove the header
-    str_remove_all("\"") # Remove quotes
-}
 
 ```
 
