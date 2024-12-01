@@ -2,7 +2,7 @@
 title: "Data Cleaning"
 author: 
   - Rune Daucke (runda, s165493)
-  - David Faurdal (dalofa)
+  - David Faurdal (dalofa, s144523)
   - Luisa Weisch (s233028)
 date: 12/02-2024
 format:

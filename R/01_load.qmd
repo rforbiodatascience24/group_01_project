@@ -51,7 +51,7 @@ if (!dir.exists(dest_folder)) {
 download.file(url, dest_path, mode = "wb")
 ```
 
-Here, the junk headers are removed, and a clean data set is generate.
+Here, the junk headers are removed, and a clean data set is generated.
 
 ```{r}
 #| label: data_wrangling
@@ -75,8 +75,10 @@ titles <- metadata |>
 # Assign new names to all columns except ID_REF
 colnames(df)[-1] <- titles
 
-control_cols <- df |> select(matches("control"))
-pd_cols <- df |> select(matches("PD"))
+control_cols <- df |> 
+  select(matches("control"))
+pd_cols <- df |> 
+  select(matches("PD"))
 
 # Combine relevant columns
 df_filtered <- df |> 
