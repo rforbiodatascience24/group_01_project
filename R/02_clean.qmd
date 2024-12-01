@@ -113,7 +113,7 @@ ggplot(df_mapped_clean, aes(x = Sample, y = Expression, fill = Condition)) +
   labs(title = "Gene Expression by Samples", x = "Sample", y = "Expression") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
-ggsave("../plots/02_normalization_check.png", width = 8, height = 6, dpi = 600)
+ggsave("../results/02_normalization_check.png", width = 8, height = 6, dpi = 600)
 ```
 
 I'll This creates a copy of the html file in the results folder
