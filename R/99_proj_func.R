@@ -1,5 +1,8 @@
 # Functions for 02_clean_qmd
 ## Function to map probe IDs to gene names
+library("annotate")
+library("hgu133a2.db")
+
 map_probe_to_gene <- function(gene_probe_ids) {
   gene_names <- gene_probe_ids |>
     sapply(function(probe_id) {

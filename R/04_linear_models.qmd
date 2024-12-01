@@ -1,0 +1,96 @@
+---
+title: "PCA Plot"
+author: 
+  - Rune Daucke (runda, s165493)
+  - David Faurdal (dalofa, s144523)
+  - Luisa Weisch (s233028)
+date: 12/02-2024
+format:
+  html:
+    embed-resources: true
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+# Looking for genes that are differential expressed
+
+```{r}
+#| label: load_libraries_data
+#| eval: TRUE
+#| echo: TRUE
+#| results: hide
+#| message: FALSE
+#| warning: FALSE
+
+library(broom)
+library(tidyverse)
+
+df_long <- read_tsv("../data/02_dat_clean.tsv")
+```
+
+```{r}
+#| label: fit lm models
+
+
+df_nested_exp <- df_long |>
+  mutate(log2_exp = log2(Expression)) |> # transform data to log2
+  group_by(Gene) |>
+  nest() |>
+  mutate(model_object = map(data, ~lm(log2_exp ~ 
+                                      Condition, data = .x))) %>%
+  mutate(model_object_tidy = map(model_object, ~ tidy(.x, conf.int = TRUE,
+                                                      conf.level = 0.95)))
+
+#Fitting Linear models
+df_est <- df_nested_exp %>%
+  unnest(model_object_tidy) %>%
+  filter(term == "ConditionPD") %>%
+  dplyr::select(Gene, estimate, std.error, statistic, p.value, conf.low, conf.high) %>%
+  ungroup() %>%
+  mutate(q.value = p.adjust(p.value),
+  is_significant = if_else(q.value < 0.05, "Yes", "No"))
+
+
+ggplot(df_est, aes(estimate, -log10(p.value), color = is_significant)) +
+  geom_hline(yintercept = 0) +
+  geom_point(alpha = .5) +
+  ggrepel::geom_text_repel(data = filter(df_est, is_significant == "Yes"),
+                           aes(label = Gene),
+                           segment.size = 0.3,
+                           size = 2,
+                           max.overlaps = 100) +
+  labs(title= "Genes Associated with PD", 
+       subtitle = paste("Genes highlighted in turquoise were significant ",
+                        "after multiple testing correction"),
+       caption = "Data from DOI: 10.1186/s12864-015-2058-3",
+       x = "Estimates",
+       y = "-log10(p)") +
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    plot.title = element_text(hjust = 1),
+    plot.subtitle = element_text(hjust = 1))
+
+```
+
+```{r}
+#| label: copy_to_results
+#| eval: TRUE
+#| echo: TRUE
+#| results: hide
+#| message: FALSE
+#| warning: FALSE
+
+# Define source and destination
+source_file <- "04_linear_models.html"
+destination_dir <- "../results/"
+
+# Ensure the destination directory exists
+if (!dir.exists(destination_dir)) {
+  dir.create(destination_dir, recursive = TRUE)
+}
+
+# Move the file
+file.copy(source_file, file.path(destination_dir, source_file), overwrite = TRUE)
+```
