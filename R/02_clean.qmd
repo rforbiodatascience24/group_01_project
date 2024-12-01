@@ -88,28 +88,7 @@ write_tsv(x = df_mapped_clean,
           file = "../data/02_dat_clean.tsv")
 ```
 
-Here, we plot the distribution to check if normalization is needed
-
-```{r}
-#| label: normalization_check_plot
-#| eval: TRUE
-#| echo: TRUE
-#| message: FALSE
-#| warning: FALSE
-#| fig.width: 8
-#| fig.height: 6
-
-# Create the boxplot to evaluate need for normalization and data spread
-ggplot(df_mapped_clean, aes(x = Sample, y = Expression, fill = Condition)) +
-  geom_boxplot() +
-  theme_minimal() +
-  labs(title = "Gene Expression by Samples", x = "Sample", y = "Expression") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1))
-
-ggsave("../results/02_normalization_check.png", width = 8, height = 6, dpi = 600)
-```
-
-I'll This creates a copy of the html file in the results folder
+This creates a copy of the html file in the results folder.
 
 ```{r}
 #| label: copy_to_results_2
