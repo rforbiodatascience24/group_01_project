@@ -15,6 +15,10 @@ library(tidyverse)
 source("99_proj_func.R")
 library(dplyr)
 
+#| eval: false
+#| echo: true
+Sys.setenv(VROOM_CONNECTION_SIZE = "500000")
+
 ```
 
 ## Download and load data
@@ -23,7 +27,6 @@ For ease of running the data is downloaded directly from Gene Expression Omnibus
 
 ```{r}
 #| results: "hide"
-
 
 # Download data
 url <- "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE72nnn/GSE72267/matrix/GSE72267_series_matrix.txt.gz"
@@ -39,41 +42,54 @@ download.file(url, dest_path, mode = "wb")
 Next, dataframes are created, containing the reads of specific genes for multiple samples. This dataframe will get saved as 01_dat_load.tsv for further anaylsis.
 ```{r}
 # Load and wrangle data
-df <- read_tsv(dest_path, comment = "!") %>%
-  as_tibble()
-
+df <- read_tsv(dest_path, comment = "!")
 metadata <- readLines(dest_path)
 
+# Extracting Sample_title
 titles <- extract_feature("!Sample_title", metadata)
 
 # Assign new names to all columns except ID_REF
 # This replaces the accession with the sample title given in
 # the "!" comment fields
 colnames(df)[-1] <- titles
-control_cols <- df %>% dplyr::select(matches("control"))
-pd_cols <- df %>% dplyr::select(matches("PD"))
+control_cols <- df %>% select(matches("control"))
+pd_cols <- df %>% select(matches("PD"))
 
 # Combine relevant columns 
-bind_cols(dplyr::select(df, ID_REF), control_cols, pd_cols)
+df_bind <- bind_cols(select(df, ID_REF), control_cols, pd_cols)
+
+```
 
 
-# write to new load data table
-write_tsv(x = df, file="../data/01_dat_load.tsv")
-
+Next, we look at the additional metadata provided in the data file, to if there is any relevant information 
+```{r}
 # Load Metadata
 num_sample_titles <- length(titles)
 
-# Extract all unique feature names
-feature_names <- metadata %>%
+# Extract all unique feature names, and filter features to include only those with matching number of entries
+filtered_features <- metadata %>%
   str_extract("^!\\S+") %>%
-  unique()
+  unique() %>% 
+  keep(~ length(extract_feature(.x, metadata)) == num_sample_titles)
+
+# Add Metadata features
+# Extract metadata for filtered features
+metadata_table <- map_dfc(filtered_features, ~ {
+  extract_feature(.x, metadata)
+}) %>%
+  set_names(str_remove(filtered_features, "^!"))# Clean feature names
+
+# Combine metadata with the main data
+# df_combined <- metadata_table %>% left_join(df_wider, by = c("Sample_title" = "Sample"))
 
 ```
 
-Note: If the loading of the data returns a "The size of the connection buffer was not large enough to fit a line"-error this can be resolved by running:
+
+Since the data has nothing to do with the individuals, but instead with the with the study, there is no relevant information for the analysis. This means the the data without additional metadata will be saved as 01_dat_load.tsv.
 
 ```{r}
-#| eval: false
-#| echo: true
-Sys.setenv(VROOM_CONNECTION_SIZE = "500000")
+# write to new load data table
+write_tsv(x = df_bind, file="../data/01_dat_load.tsv")
+
 ```
+

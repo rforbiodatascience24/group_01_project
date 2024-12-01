@@ -7,6 +7,7 @@ author:
 format: html
 editor: visual
 ---
+
 ```{r}
 #| results: "hide"
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
@@ -16,7 +17,6 @@ if (!requireNamespace("BiocManager", quietly = TRUE)) {
 BiocManager::install("hgu133a2.db")
 
 ```
-
 
 ## Clean Data
 
@@ -45,7 +45,7 @@ df_tidy <- df_wide |>
     Condition = case_when(
     str_detect(Sample,"control") ~"Control",
     TRUE ~ "PD"),
-    gene_name = getSYMBOL(ID_REF,"hgu133a2.db") # convert probe_ID to gene_name
+    gene_name = ID_REF#getSYMBOL(ID_REF,"hgu133a2.db") # convert probe_ID to gene_name
     ) |>
   dplyr::select(-ID_REF)
 
@@ -56,12 +56,32 @@ df_wider <- df_tidy |>
   )
 
 ```
+
 ```{r}
 # Checking for NaNs
-df_wider %>%
-  summarise(across(where(is.numeric), ~sum(is.nan(.))))
+#df_wider %>%
+ # summarise(across(where(is.numeric), ~sum(is.nan(.))))
 ```
+
+# STILL SOME DUPLICATES - ID_REF PROBLEM
+
+```{r}
+# Checking for duplicates:
+
+df_duplicates <- df_wide %>%
+  group_by("ID_REF")
+
+print(df_duplicates)
+
+df_tidy %>%
+  group_by(Sample, gene_name) %>%
+  summarise(n = n(), .groups = 'drop') %>%
+  filter(n > 1)
+
+```
+
 Looks like there are no NaN values in the dataframe, so next the data gets joined with the metadata, to see if there is any relevant information for the analysis.
+
 ```{r}
 #| results: "hide"
 # Add Metadata features
@@ -84,8 +104,10 @@ Since the data has nothing to do with the individuals, but instead with the with
 
 ```{r}
 # Saving dataframe in .tsv file
+head(df_wider)
+class(df_wider)
+nrow(df_wider)
 # write to new load data table
+df_wider <- as_tibble(df_wider)
 write_tsv(x = df_wider, file="../data/02_dat_clean.tsv")
 ```
-
-
