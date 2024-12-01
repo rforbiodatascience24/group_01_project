@@ -16,7 +16,7 @@ editor_options:
 ## PCA
 
 ```{r}
-#| label: load_libraries_data
+#| label: load_libraries_PCA
 #| eval: TRUE
 #| echo: TRUE
 #| results: hide

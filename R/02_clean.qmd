@@ -18,7 +18,7 @@ editor_options:
 The data loaded in 01_load. It is currently not in a tidy format.' The data here is further cleaned and mapped to correct gene names.
 
 ```{r}
-#| label: load_libraries_data
+#| label: load_libraries_clean
 #| eval: TRUE
 #| echo: TRUE
 #| results: hide
@@ -112,7 +112,7 @@ ggsave("../results/02_normalization_check.png", width = 8, height = 6, dpi = 600
 I'll This creates a copy of the html file in the results folder
 
 ```{r}
-#| label: copy_to_results
+#| label: copy_to_results_2
 #| eval: TRUE
 #| echo: TRUE
 #| results: hide

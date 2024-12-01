@@ -1,5 +1,5 @@
 ---
-title: "PCA Plot"
+title: "Differential Gene Expression"
 author: 
   - Rune Daucke (runda, s165493)
   - David Faurdal (dalofa, s144523)
@@ -16,7 +16,7 @@ editor_options:
 # Looking for genes that are differential expressed
 
 ```{r}
-#| label: load_libraries_data
+#| label: load_libraries_lm
 #| eval: TRUE
 #| echo: TRUE
 #| results: hide
@@ -57,7 +57,6 @@ df_est <- df_nested_exp |>
 
 ```
 
-
 ```{r}
 #| label: Volcano plot
 #| eval: TRUE
@@ -93,7 +92,7 @@ ggplot(df_est, aes(estimate, -log10(p.value), color = is_significant)) +
 Using this approach, that is fitting linear models to the genes, no genes are identified as being differential expressed (at least not significantly).
 
 ```{r}
-#| label: copy_to_results
+#| label: copy_to_results_4
 #| eval: TRUE
 #| echo: TRUE
 #| results: hide
