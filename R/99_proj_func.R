@@ -13,3 +13,4 @@ map_probe_to_gene <- function(gene_probe_ids) {
   ## Ensure no duplicates or missing values in gene names
   return(make.unique(ifelse(is.na(gene_names), "Unnamed", gene_names)))
 }
+
