@@ -1,5 +1,5 @@
 ---
-title: "Data Cleaning"
+title: "Data Loading"
 author: 
   - Rune Daucke (runda, s165493)
   - David Faurdal (dalofa)
@@ -23,7 +23,7 @@ editor_options:
 #| message: FALSE
 #| warning: FALSE
 
-library(tidyverse)
+library("tidyverse")
 Sys.setenv(VROOM_CONNECTION_SIZE = "500000") #Prevent memory error
 ```
 
@@ -64,28 +64,49 @@ Here, the junk headers are removed, and a clean data set is generate.
 df <- read_tsv(dest_path, comment = "!")
 metadata <- readLines(dest_path)
 
-# Removes junk headers
-titles <- metadata %>%
-  str_subset("^!Sample_title") %>%
-  str_split("\t", simplify = TRUE) %>%
-  as.vector() %>%
-  .[-1] %>%
+# Remove junk headers and extract sample titles
+titles <- metadata |>
+  str_subset("^!Sample_title") |>
+  str_split("\t", simplify = TRUE) |>
+  as.vector() |>
+  (\(x) x[-1])() |>  # Extract all elements except the first
   str_remove_all("\"")
 
 # Assign new names to all columns except ID_REF
-# This replaces the accession with the sample title given in
-# the "!" comment fields
 colnames(df)[-1] <- titles
-control_cols <- select(df, matches("control"))
-pd_cols <- select(df, matches("PD"))
 
-# Combine relevant columns 
-df_filtered <- bind_cols(select(df, ID_REF), control_cols, pd_cols) %>%
+control_cols <- df |> select(matches("control"))
+pd_cols <- df |> select(matches("PD"))
+
+# Combine relevant columns
+df_filtered <- df |> 
+  select(ID_REF) |> 
+  bind_cols(control_cols, pd_cols) |> 
   filter(!str_detect(ID_REF, "AFFX")) # This removes spiked-in controls
 
-# write to new load data table
-write_tsv(x = df_filtered,
-          file = "../data/01_data_clean.tsv")
+# Write to a new load data table
+write_tsv(df_filtered, "../data/01_dat_load.tsv")
+```
 
-print(df_filtered)
+This creates a copy of the html file in the results folder
+
+```{r}
+#| label: copy_to_results
+#| eval: TRUE
+#| echo: TRUE
+#| results: hide
+#| message: FALSE
+#| warning: FALSE
+
+# Define source and destination
+source_file <- "01_load.html"
+destination_dir <- "../results/"
+
+# Ensure the destination directory exists
+if (!dir.exists(destination_dir)) {
+  dir.create(destination_dir, recursive = TRUE)
+}
+
+# Move the file
+file.copy(source_file, file.path(destination_dir, source_file), overwrite = TRUE)
 ```

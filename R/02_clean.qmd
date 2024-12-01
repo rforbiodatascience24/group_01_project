@@ -1,5 +1,5 @@
 ---
-title: "Data Mapping"
+title: "Data Cleaning"
 author: 
   - Rune Daucke (runda, s165493)
   - David Faurdal (dalofa)
@@ -25,17 +25,17 @@ The data loaded in 01_load. It is currently not in a tidy format.' The data here
 #| message: FALSE
 #| warning: FALSE
 
-library(tidyverse)
-library(annotate)
-library(hgu133a2.db)
+library("tidyverse")
+library("annotate")
+library("hgu133a2.db")
 
-df <- read_tsv("../data/01_data_clean.tsv")
+df <- read_tsv("../data/01_dat_load.tsv")
 ```
 
 Here, the conditions and the genes are mapped to the data
 
 ```{r}
-#| label: data_mapping
+#| label: data_tidy_mapping
 #| eval: TRUE
 #| echo: TRUE
 #| results: hide
@@ -43,31 +43,32 @@ Here, the conditions and the genes are mapped to the data
 #| warning: FALSE
 
 # Reshape the data and add the conditions
-df_conditon_wide <- df %>%
+df_conditon_wide <- df |> 
   pivot_longer(
     cols = -c(ID_REF),
     names_to = "Sample",
     values_to = "Expression"
-  ) %>%
+  ) |> 
   pivot_wider(
     names_from = ID_REF,
     values_from = Expression
-  ) %>%
+  ) |> 
   mutate(Condition = case_when(
     str_detect(Sample, "control") ~ "Control",
     TRUE ~ "PD"
-  )) %>%
+  )) |> 
   dplyr::select(Sample, Condition, everything())
 
 # Get the gene probe IDs
 gene_probe_ids <- colnames(df_conditon_wide)[-c(1, 2)]
 
 # Map probe IDs to gene names
-gene_names <- sapply(gene_probe_ids, function(probe_id) {
-  mapped_genes <- ifelse(is.na(probe_id) || probe_id == "", "Unnamed", 
-                         ifelse(is.null(getSYMBOL(probe_id, "hgu133a2.db")), probe_id, getSYMBOL(probe_id, "hgu133a2.db")))
-  return(mapped_genes)
-})
+gene_names <- gene_probe_ids |> 
+  sapply(function(probe_id) {
+    mapped_genes <- ifelse(is.na(probe_id) || probe_id == "", "Unnamed", 
+                           ifelse(is.null(getSYMBOL(probe_id, "hgu133a2.db")), probe_id, getSYMBOL(probe_id, "hgu133a2.db")))
+    return(mapped_genes)
+  })
 
 # Ensure no duplicates or missing values in gene names
 gene_names <- make.unique(ifelse(is.na(gene_names), "Unnamed", gene_names))
@@ -81,17 +82,17 @@ pd_order <- paste("Blood_PD_patient_", 1:41, sep = "")
 all_samples <- c(control_order, pd_order)
 
 # Reshape data to long format again and apply ordering
-df_mapped <- df_conditon_wide %>%
+df_mapped_clean <- df_conditon_wide |> 
   pivot_longer(
     cols = -c(Sample, Condition),
     names_to = "Gene",
     values_to = "Expression"
-  ) %>%
+  ) |> 
   mutate(
     Sample = factor(Sample, levels = all_samples))
 
-write_tsv(x = df_mapped,
-          file = "../data/02_data_mapped.tsv")
+write_tsv(x = df_mapped_clean,
+          file = "../data/02_dat_clean.tsv")
 ```
 
 Here, we plot the distribution to check if normalization is needed
@@ -105,12 +106,35 @@ Here, we plot the distribution to check if normalization is needed
 #| fig.width: 8
 #| fig.height: 6
 
-# Create the boxplot to evaluate need for normalization
-ggplot(df_mapped, aes(x = Sample, y = Expression, fill = Condition)) +
+# Create the boxplot to evaluate need for normalization and data spread
+ggplot(df_mapped_clean, aes(x = Sample, y = Expression, fill = Condition)) +
   geom_boxplot() +
   theme_minimal() +
   labs(title = "Gene Expression by Samples", x = "Sample", y = "Expression") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 ggsave("../plots/02_normalization_check.png", width = 8, height = 6, dpi = 600)
+```
+
+I'll This creates a copy of the html file in the results folder
+
+```{r}
+#| label: copy_to_results
+#| eval: TRUE
+#| echo: TRUE
+#| results: hide
+#| message: FALSE
+#| warning: FALSE
+
+# Define source and destination
+source_file <- "02_clean.html"
+destination_dir <- "../results/"
+
+# Ensure the destination directory exists
+if (!dir.exists(destination_dir)) {
+  dir.create(destination_dir, recursive = TRUE)
+}
+
+# Move the file
+file.copy(source_file, file.path(destination_dir, source_file), overwrite = TRUE)
 ```
