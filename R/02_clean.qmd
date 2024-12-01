@@ -62,16 +62,9 @@ df_conditon_wide <- df |>
 # Get the gene probe IDs
 gene_probe_ids <- colnames(df_conditon_wide)[-c(1, 2)]
 
-# Map probe IDs to gene names
-gene_names <- gene_probe_ids |> 
-  sapply(function(probe_id) {
-    mapped_genes <- ifelse(is.na(probe_id) || probe_id == "", "Unnamed", 
-                           ifelse(is.null(getSYMBOL(probe_id, "hgu133a2.db")), probe_id, getSYMBOL(probe_id, "hgu133a2.db")))
-    return(mapped_genes)
-  })
-
-# Ensure no duplicates or missing values in gene names
-gene_names <- make.unique(ifelse(is.na(gene_names), "Unnamed", gene_names))
+# Map probe IDs to gene names using the function from func script
+source("../R/99_proj_func.R") 
+gene_names <- map_probe_to_gene(gene_probe_ids)
 
 # Replace the probe IDs with the mapped gene names in the dataframe
 colnames(df_conditon_wide)[-c(1, 2)] <- gene_names
