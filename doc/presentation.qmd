@@ -39,9 +39,7 @@ Collected from the blood of: - 20 healthy patients - 40 patients diagnosed with 
 :::
 
 ::: {.column width="50%"}
-::: {style="background-color: white; padding: 10px; display:"}
 ![tidy_format](images/tidy_format.png){width="80%" height="80%"}
-:::
 :::
 :::
 
@@ -59,18 +57,25 @@ present_genes <- find_genes(inflam_list, all_genes)
 df_wide$inflam_mean <- rowMeans(df_wide[present_genes], na.rm = TRUE)
 ```
 
+## Analysis
+-   PCA
+    - Normalization
+    - PCA calculation
+    - Plotting
 
--   
+-   Differential Expression Analysis
+    - Caclculation of log2 of the expression
+    - Fitting linear model to predict the log2 expression based on the condition
+    - adjusts p-values
+    -plotting
+    
+-   Differential Expression Analysis of known biomarker genes
+    - Visualization of the mean of biomarker specific gene expression 
+    
+-   KEGG Enrichment Analysis
+    - Separates up and down regulated genes
+    - Perform KEGG analysis on up or down regulated genes
 
-    -   PCA
-
--   
-
-    -   Differential Expression
-
--   
-
-    -   Differential Expression of known biomarker gene
 
 ## Results - PCA <!-- Rune -->
 
@@ -102,7 +107,14 @@ df_wide$inflam_mean <- rowMeans(df_wide[present_genes], na.rm = TRUE)
 :::
 :::
 :::
-
+##### Statistical Significant difference
+```{r}
+#| echo: true
+#| eval: false
+# Calculate p-value
+t_test_result <- t.test(ndg_mean ~ Condition, data = df)
+```
+p-value = 0.3512
 ## Results - Diff. Expression of known biomarkers <!-- Luisa -->
 
 ### Pro-inflammatory genes
@@ -120,7 +132,14 @@ df_wide$inflam_mean <- rowMeans(df_wide[present_genes], na.rm = TRUE)
 :::
 :::
 :::
-
+##### Statistical significant difference
+```{r}
+#| echo: true
+#| eval: false
+# Calculate p-value
+t_test_result <- t.test(inflam_mean ~ Condition, data = df)
+```
+p-value = 0.348
 ## Kegg enrichment
 
 ::: {style="background-color: white; padding: 10px; display:"}
