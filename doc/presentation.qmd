@@ -23,13 +23,38 @@ Collected from the blood of: - 20 healthy patients - 40 patients diagnosed with 
 
 ## Methods <!-- Luisa -->
 
--   Cleaning of dataset
+## Cleaning and Filtering Dataset
+
+::: columns
+::: {.column width="50%"}
+-   Arranging samples by condition
+
+-   Filter out AFFX related spikes
+
+-   Reshaping into tidy format
+
 -   Statistical Analyses:
+:::
+
+::: {.column width="50%"}
+::: {style="background-color: white; padding: 10px; display:"}
+![tidy_format](imatidy_format.png){width="80%" height="80%"}
+:::
+:::
+:::
+
 -   
+
+-   
+
     -   PCA
+
 -   
+
     -   Differential Expression
+
 -   
+
     -   Differential Expression of known biomarker gene
 
 ## Results - PCA <!-- Rune -->
@@ -45,7 +70,9 @@ Collected from the blood of: - 20 healthy patients - 40 patients diagnosed with 
 :::
 
 ## Results - Diff. Expression of known biomarkers <!-- Luisa -->
+
 ### Neurodegenerative-associated genes
+
 ::: columns
 ::: {.column width="50%"}
 ::: {style="background-color: white; padding: 10px; display:"} ![ndg_density](../results/07_neurodeg_density.png){width="80%"}
@@ -57,7 +84,9 @@ Collected from the blood of: - 20 healthy patients - 40 patients diagnosed with 
 :::
 
 ## Results - Diff. Expression of known biomarkers <!-- Luisa -->
+
 ### Pro-inflammatory genes
+
 ::: columns
 ::: {.column width="50%"}
 ::: {style="background-color: white; padding: 10px; display:"} ![ndg_density](../results/07_neurodeg_density.png){width="80%"}
@@ -67,7 +96,6 @@ Collected from the blood of: - 20 healthy patients - 40 patients diagnosed with 
 ::: {style="background-color: white; padding: 10px; display:"} ![ndg_boxplot](../results/07_neurodeg_boxplot.png){width="80%"}
 :::
 :::
-
 
 ## Kegg enrichment
 
