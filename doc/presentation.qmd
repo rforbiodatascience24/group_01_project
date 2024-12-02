@@ -33,17 +33,32 @@ Collected from the blood of: - 20 healthy patients - 40 patients diagnosed with 
 
 -   Reshaping into tidy format
 
--   Statistical Analyses:
+-   Mapping probe IDs to genes using Affymetrix database
+
+-   Sorting samples 
 :::
 
 ::: {.column width="50%"}
 ::: {style="background-color: white; padding: 10px; display:"}
-![](images/tidy_format.png){width="80%" height="80%"}
+![tidy_format](images/tidy_format.png){width="80%" height="80%"}
 :::
 :::
 :::
 
--   
+## Augmentation
+-   Mean expression of sets of potential biomarkers
+    -   Neurodegenerative-associated genes
+    -   Pro-Inflammation genes
+```{r}
+#| echo: true
+#| eval: false
+# inflammation index
+inflam_list <- c("IL1rn", "TNF", "Saa3", "Emr1", "Adam8", "Itgam")
+
+present_genes <- find_genes(inflam_list, all_genes)
+df_wide$inflam_mean <- rowMeans(df_wide[present_genes], na.rm = TRUE)
+```
+
 
 -   
 
@@ -75,13 +90,15 @@ Collected from the blood of: - 20 healthy patients - 40 patients diagnosed with 
 
 ::: columns
 ::: {.column width="50%"}
-::: 
-:::{style="background-color: white; padding: 10px; display:"} ![ndg_density](../results/07_neurodeg_density.png){width="80%"}
+:::{style="background-color: white; padding: 10px; display:"}
+![neurodegenerative_density](../results/07_neurodeg_density.png){width="80%"}
 :::
 :::
+
+
 ::: {.column width="50%"}
 :::{style="background-color: white; padding: 10px; display:"}
-![ndg_boxplot](../results/07_neurodeg_boxplot.png){width="80%"}
+![neurodegenerative_boxplot](../results/07_neurodeg_boxplot.png){width="80%"}
 :::
 :::
 :::
@@ -93,13 +110,13 @@ Collected from the blood of: - 20 healthy patients - 40 patients diagnosed with 
 ::: columns
 ::: {.column width="50%"}
 ::: {style="background-color: white; padding: 10px; display:"}
-![inflam_density](../results/07_inflammatory_density.png){width="80%"}
+![inflammatory_density](../results/07_inflammatory_density.png){width="80%"}
 :::
 :::
 
 ::: {.column width="50%"}
 ::: {style="background-color: white; padding: 10px; display:"}
-![inflam_boxplot](../results/07_inflammatory_boxplot.png){width="80%"}
+![inflammatory_boxplot](../results/07_inflammatory_boxplot.png){width="80%"}
 :::
 :::
 :::
