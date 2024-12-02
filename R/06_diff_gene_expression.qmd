@@ -67,7 +67,7 @@ df_est <- df_nested_exp |>
 #| fig.height: 6
 
 # Generate volcano plot
-ggplot(df_est, aes(log2(estimate),
+ggplot(df_est, aes(estimate,
                    -log10(p.value),
                    color = is_significant)) +
   geom_hline(yintercept = 0) +
@@ -81,7 +81,7 @@ ggplot(df_est, aes(log2(estimate),
        subtitle = paste("Genes highlighted in turquoise were significant ",
                         "after multiple testing correction"),
        caption = "Data from DOI: 10.1186/s12864-015-2058-3",
-       x = "Estimates",
+       x = "log2FC",
        y = "-log10(p)") +
   theme_minimal() +
   theme(

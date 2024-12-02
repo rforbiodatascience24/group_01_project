@@ -19,7 +19,11 @@ editor: visual
 
 Gene expression data (Affymetrix platform).
 
-Collected from the blood of: - 20 healthy patients - 40 patients diagnosed with sporadic Parkinsons disease
+
+Collected from the blood of: 
+
+- 20 healthy patients
+- 40 patients diagnosed with sporadic Parkinsons disease who have not received drug treatment.
 
 ## Cleaning and Filtering Dataset
 
@@ -78,7 +82,9 @@ df_wide$inflam_mean <- rowMeans(df_wide[present_genes], na.rm = TRUE)
 :::
 
 ## Results - Diff. Expression <!-- David -->
+```{r}
 
+```
 ::: {style="background-color: white; padding: 10px; display:"}
 ![volcano](../results/06_Volcano_plot_gene_exp.png){width="80%"}
 :::

@@ -9,6 +9,8 @@ format:
   html:
     embed-resources: true
 editor: visual
+execute:
+  output-dir: "../results"
 editor_options: 
   chunk_output_type: console
 ---
@@ -81,7 +83,6 @@ colnames(df)[-1] <- titles
 write_tsv(df, "../data/01_dat_load.tsv")
 ```
 
-
 This creates a copy of the html file in the results folder
 
 ```{r}
@@ -104,3 +105,4 @@ if (!dir.exists(destination_dir)) {
 # Move the file
 file.copy(source_file, file.path(destination_dir, source_file), overwrite = TRUE)
 ```
+

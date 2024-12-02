@@ -9,6 +9,8 @@ format:
   html:
     embed-resources: true
 editor: visual
+execute:
+  output-dir: "../results"
 editor_options: 
   chunk_output_type: console
 ---
