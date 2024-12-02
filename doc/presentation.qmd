@@ -12,7 +12,12 @@ format:
 
 ## Introduction <!-- David -->
 
-Gene expression data from blood samples collected using the affymetrix microarray platform. - 20 healthy patients (control) - 40 patients dianosed with sporadic Parkinsons Disease, who have yet to recieve drug treatment.
+Gene expression data (Affymetrix platform).
+
+Collected from the blood of:
+-   20 healthy patients
+-   40 patients diagnosed with sporadic Parkinsons disease
+
 
 ## Methods <!-- Luisa -->
 
@@ -28,6 +33,8 @@ Gene expression data from blood samples collected using the affymetrix microarra
 ## Results - PCA <!-- Rune -->
 
 ## Results - Diff. Expression <!-- David -->
+<div style="background-color: white; padding: 10px; display:"> ![volcano](../results/06_Volcano_plot_gene_exp.png){width=80%}</div>
+
 
 ## Results - Diff. Expression of known biomarkers <!-- Luisa -->
 
