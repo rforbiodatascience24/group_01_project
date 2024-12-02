@@ -38,7 +38,7 @@ Collected from the blood of: - 20 healthy patients - 40 patients diagnosed with 
 
 ::: {.column width="50%"}
 ::: {style="background-color: white; padding: 10px; display:"}
-![tidy_format](imatidy_format.png){width="80%" height="80%"}
+![](images/tidy_format.png){width="80%" height="80%"}
 :::
 :::
 :::
