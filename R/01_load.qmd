@@ -25,6 +25,8 @@ editor_options:
 
 library("tidyverse")
 Sys.setenv(VROOM_CONNECTION_SIZE = "500000") #Prevent memory error
+library(dplyr)
+
 ```
 
 ## Download and load data
@@ -75,20 +77,10 @@ titles <- metadata |>
 # Assign new names to all columns except ID_REF
 colnames(df)[-1] <- titles
 
-control_cols <- df |> 
-  select(matches("control"))
-pd_cols <- df |> 
-  select(matches("PD"))
-
-# Combine relevant columns
-df_filtered <- df |> 
-  select(ID_REF) |> 
-  bind_cols(control_cols, pd_cols) |> 
-  filter(!str_detect(ID_REF, "AFFX")) # This removes spiked-in controls
-
 # Write to a new load data table
-write_tsv(df_filtered, "../data/01_dat_load.tsv")
+write_tsv(df, "../data/01_dat_load.tsv")
 ```
+
 
 This creates a copy of the html file in the results folder
 

@@ -42,6 +42,17 @@ Here, the conditions and the genes are mapped to the data
 #| message: FALSE
 #| warning: FALSE
 
+control_cols <- df |> 
+  dplyr::select(matches("control"))
+pd_cols <- df |> 
+  dplyr::select(matches("PD"))
+
+# Combine relevant columns
+df <- df |> 
+  dplyr::select(ID_REF) |>   
+  bind_cols(control_cols, pd_cols) |> 
+  filter(!str_detect(ID_REF, "AFFX")) # This removes spiked-in controls
+
 # Reshape the data and add the conditions
 df_conditon_wide <- df |> 
   pivot_longer(
