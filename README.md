@@ -11,7 +11,7 @@ This repository contains the code necessary to download, clean and analyze the d
 
 The data can be downloaded from the NCBI Gene Expression Omnibus under the accession GSE72267 but programmatic retreival of the data is inceluded in the 01_load.qmd script.
 
-To render the entire analysis document run the following in the terminal
+To render all quarto documents run the following in the terminal. Alternatively simply render the R/00_all.qmd document to get the analysis collect in one file.
 
 ```
 for quarto_file in R/*.qmd; do quarto render $quarto_file --output-dir ../results; done
