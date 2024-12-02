@@ -19,10 +19,7 @@ editor: visual
 
 Gene expression data (Affymetrix platform).
 
-Collected from the blood of:
--   20 healthy patients
--   40 patients diagnosed with sporadic Parkinsons disease
-
+Collected from the blood of: - 20 healthy patients - 40 patients diagnosed with sporadic Parkinsons disease
 
 ## Methods <!-- Luisa -->
 
@@ -37,12 +34,38 @@ Collected from the blood of:
 
 ## Results - PCA <!-- Rune -->
 
-## Results - Diff. Expression <!-- David -->
-<div style="background-color: white; padding: 10px; display:"> ![volcano](../results/06_Volcano_plot_gene_exp.png){width=80%}</div>
+::: {style="background-color: white; padding: 10px; display:"}
+![PCA](../results/05_PCA_plot.png){width="80%" height="80%"}
+:::
 
+## Results - Diff. Expression <!-- David -->
+
+::: {style="background-color: white; padding: 10px; display:"}
+![volcano](../results/06_Volcano_plot_gene_exp.png){width="80%"}
+:::
 
 ## Results - Diff. Expression of known biomarkers <!-- Luisa -->
 
-## Conclusion <!-- Rune --> 
+## Kegg enrichment
 
-Something comparing their results to ours?
+::: {style="background-color: white; padding: 10px; display:"}
+![kegg_enrichment](../results/08_kegg_enrichment.png){width="80%" height="80%"}
+:::
+
+## Kegg pathway
+
+::: {style="background-color: white; display:"}
+![kegg_pathway](../results/08_hsa00140.pathview.png){width="50%" height="50%"}
+:::
+
+
+## Conclusion <!-- Rune -->
+
+-   No clustering / Separtion along the PC's
+-   No significant differentially expressed genes
+-   What to do next?
+    -   With patient metadata, clustering might present itself
+    -   Non-linear tendencies. Performing UMAP or t-SNE could provide clustering
+    -   ANN, KNN logistic modelling could reveal expression patterns
+    -   Redo the experiment
+    -   Perhaps blood transcriptomics on PD patient, isn't the way to go, though biomarker discovery would be ideal.

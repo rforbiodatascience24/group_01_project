@@ -28,9 +28,10 @@ Gene expression data from blood samples collected using the affymetrix microarra
 
 ## PCA
 
-<div style="background-color: white; padding: 10px; display: inline-block;">
+<div style="background-color: white; margin-top: -50px;">
   ![PCA](../results/05_PCA_plot.png)
 </div>
+
 
 ## Diff. Expression
 
