@@ -83,10 +83,19 @@ df_wide$inflam_mean <- rowMeans(df_wide[present_genes], na.rm = TRUE)
 
 ## Results - Diff. Expression <!-- David -->
 ```{r}
-
+#| echo: true
+#| eval: false
+df_nested_exp <- df_long |>
+  mutate(log2_exp = log2(Expression)) |> # transform data to log2
+  group_by(Gene) |>
+  nest() |>
+  mutate(model_object = map(data, ~lm(log2_exp ~ Condition, 
+                                      data = .x))) |>
+  mutate(model_object_tidy = map(model_object, ~ tidy(.x, conf.int = TRUE,
+                                                      conf.level = 0.95)))
 ```
 ::: {style="background-color: white; padding: 10px; display:"}
-![volcano](../results/06_Volcano_plot_gene_exp.png){width="80%"}
+![volcano](../results/06_Volcano_plot_gene_exp.png){width="60%"}
 :::
 
 ## Results - Diff. Expression of known biomarkers <!-- Luisa -->
