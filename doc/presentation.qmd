@@ -1,0 +1,36 @@
+---
+title: "Group 01 project: Analysis of Gene Expression in Parkinsson Disease"
+author: 
+  - Rune Daucke, runda
+  - David Faurdal, s144523
+  - Luisa Weisch,
+
+format:
+  revealjs:
+    theme: dark
+---
+
+## Introduction <!-- David -->
+
+Gene expression data from blood samples collected using the affymetrix microarray platform. - 20 healthy patients (control) - 40 patients dianosed with sporadic Parkinsons Disease, who have yet to recieve drug treatment.
+
+## Methods <!-- Luisa -->
+
+-   Cleaning of dataset
+-   Statistical Analyses:
+-   
+    -   PCA
+-   
+    -   Differential Expression
+-   
+    -   Differential Expression of known biomarker gene
+
+## Results - PCA <!-- Rune -->
+
+## Results - Diff. Expression <!-- David -->
+
+## Results - Diff. Expression of known biomarkers <!-- Luisa -->
+
+## Conclusion <!-- Rune --> 
+
+Something comparing their results to ours?
