@@ -64,16 +64,15 @@ df_wide$inflam_mean <- rowMeans(df_wide[present_genes], na.rm = TRUE)
     - Plotting
 
 -   Differential Expression Analysis
-    - Caclculation of log2 of the expression
+    - Calculation of log2 of the expression
     - Fitting linear model to predict the log2 expression based on the condition
     - adjusts p-values
-    -plotting
+    - Plotting
     
 -   Differential Expression Analysis of known biomarker genes
     - Visualization of the mean of biomarker specific gene expression 
     
 -   KEGG Enrichment Analysis
-    - Separates up and down regulated genes
     - Perform KEGG analysis on up or down regulated genes
 
 
