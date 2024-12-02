@@ -70,7 +70,7 @@ kegg_down <- kegg_analysis(diff_down, Gene_symbol, 1) # No results for kegg_down
 ggplot(kegg_up, aes(x = Count, y = reorder(Description, -p.adjust), fill = p.adjust)) +
   geom_bar(stat = "identity") +
   scale_fill_gradient(low = "#327EBA", high = "#E06663") +  # Gradient from blue to red
-  xlim(0, 5) +
+  xlim(0, 7) +
   labs(
     title = "KEGG Pathway Enrichment (Up-regulated)",
     x = "Protein Count",
@@ -79,10 +79,13 @@ ggplot(kegg_up, aes(x = Count, y = reorder(Description, -p.adjust), fill = p.adj
   ) +
   theme_prism() +
   theme(
-    plot.title = element_text(hjust = 0.9)  # Move title to the left
+    plot.title = element_text(hjust = 0.9)
   ) +
-  guides(fill = guide_colorbar(reverse = TRUE)) +  # Flip the color scale in the legend
-  geom_text(aes(label = scientific(p.adjust)), hjust = -0.1, color = "black")  # Format p
+  guides(fill = guide_colorbar(reverse = TRUE)) + 
+  geom_text(aes(label = scientific(p.adjust)), hjust = -0.1, color = "black")
+
+ggsave("../results/08_kegg_enrichment.png", width = 8, height = 6, dpi = 600)
+
 # Extract the pathway ID for "Steroid hormone biosynthesis"
 id_target <- kegg_up %>%
   filter(grepl("Steroid hormone biosynthesis", Description)) %>%

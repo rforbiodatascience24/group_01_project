@@ -10,11 +10,6 @@ format:
     theme: dark
 ---
 
-```{r}
-library(imager)
-library(grid)
-```
-
 
 ## Introduction
 
@@ -33,17 +28,21 @@ Gene expression data from blood samples collected using the affymetrix microarra
 
 ## PCA
 
-```{r}
-# Load the image
-pca <- load.image("../results/PCA_plot.png")
-
-# Display the image without re-plotting
-grid.raster(pca)
-```
+<div style="background-color: white; padding: 10px; display: inline-block;">
+  ![PCA](../results/05_PCA_plot.png)
+</div>
 
 ## Diff. Expression
 
 ## Diff. Expression of known biomarkers
+
+## Kegg pathway enrichment
+
+![Kegg_enrich](../results/08_kegg_enrichment.png)
+
+## Kegg pathway
+
+![Kegg_path](../results/08_hsa00140.pathview.png)
 
 ## Analysis
 

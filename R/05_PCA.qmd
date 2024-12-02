@@ -115,5 +115,5 @@ theme(legend.position = "right",
         legend.key.size = unit(3, "lines"),
         strip.text = element_text(size = 20))
 
-ggsave("../results/PCA_plot.png", width = 8, height = 6, dpi = 600)
+ggsave("../results/05_PCA_plot.png", width = 8, height = 6, dpi = 600)
 ```
