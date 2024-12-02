@@ -73,7 +73,7 @@ ggplot(data = df,
   scale_fill_manual(values = c("Control" = "blue", "PD" = "red")) +
   theme_minimal()
 
-ggsave("../results/07_neurodeg_density.png", width = 8, height = 6, dpi = 600)
+ggsave("../results/07_neurodeg_density.png", width = 8, height = 6, dpi = 600, bg = "white")
 
 
 df %>% 
@@ -89,7 +89,7 @@ df %>%
   xlab("") + 
   theme_minimal()
 
-ggsave("../results/07_neurodeg_boxplot.png", width = 8, height = 6, dpi = 600)
+ggsave("../results/07_neurodeg_boxplot.png", width = 8, height = 6, dpi = 600, bg = "white")
 
 ```
 
@@ -113,7 +113,7 @@ ggplot(df, aes(x = inflam_mean, fill = Condition)) +
   scale_fill_manual(values = c("Control" = "blue", "PD" = "red")) +
   theme_minimal()
 
-ggsave("../results/07_inflammatory_density.png", width = 8, height = 6, dpi = 600)
+ggsave("../results/07_inflammatory_density.png", width = 8, height = 6, dpi = 600, bg="white")
 
 # Boxplot
 df %>% 
@@ -129,7 +129,7 @@ df %>%
   xlab("") + 
   theme_minimal()
 
-ggsave("../results/07_inflammatory_boxplot.png", width = 8, height = 6, dpi = 600)
+ggsave("../results/07_inflammatory_boxplot.png", width = 8, height = 6, dpi = 600, bg = "white")
 ```
 
 ## Interpretation - Statistical relevance
