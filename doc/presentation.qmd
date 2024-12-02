@@ -21,27 +21,21 @@ Gene expression data (Affymetrix platform).
 
 Collected from the blood of: - 20 healthy patients - 40 patients diagnosed with sporadic Parkinsons disease
 
-## Methods <!-- Luisa -->
-
 ## Cleaning and Filtering Dataset
 
-::: columns
-::: {.column width="50%"}
+
 -   Arranging samples by condition
 
 -   Filter out AFFX related spikes
 
 -   Reshaping into tidy format
 
+![](images/tidy_format.png){width="80%" height="80%"}
+
 -   Mapping probe IDs to genes using Affymetrix database
 
 -   Sorting samples 
-:::
 
-::: {.column width="50%"}
-![tidy_format](images/tidy_format.png){width="80%" height="80%"}
-:::
-:::
 
 ## Augmentation
 -   Mean expression of sets of potential biomarkers
@@ -115,6 +109,8 @@ df_wide$inflam_mean <- rowMeans(df_wide[present_genes], na.rm = TRUE)
 t_test_result <- t.test(ndg_mean ~ Condition, data = df)
 ```
 p-value = 0.3512
+
+
 ## Results - Diff. Expression of known biomarkers <!-- Luisa -->
 
 ### Pro-inflammatory genes
@@ -140,6 +136,8 @@ p-value = 0.3512
 t_test_result <- t.test(inflam_mean ~ Condition, data = df)
 ```
 p-value = 0.348
+
+
 ## Kegg enrichment
 
 ::: {style="background-color: white; padding: 10px; display:"}
