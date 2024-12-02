@@ -15,7 +15,7 @@ format:
 editor: visual
 ---
 
-## Introduction <!-- David -->
+## Introduction
 
 Gene expression data (Affymetrix platform).
 
