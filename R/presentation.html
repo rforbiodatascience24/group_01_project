@@ -371,14 +371,29 @@ Luisa Weisch,
 </section>
 <section id="pca" class="slide level2">
 <h2>PCA</h2>
-
-<img data-src="presentation_files/figure-revealjs/unnamed-chunk-2-1.png" width="960" class="r-stretch"></section>
+<div style="background-color: white; padding: 10px; display: inline-block;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="../results/05_PCA_plot.png"></p>
+<figcaption>PCA</figcaption>
+</figure>
+</div>
+</div>
+</section>
 <section id="diff.-expression" class="slide level2">
 <h2>Diff. Expression</h2>
 </section>
 <section id="diff.-expression-of-known-biomarkers" class="slide level2">
 <h2>Diff. Expression of known biomarkers</h2>
 </section>
+<section id="kegg-pathway-enrichment" class="slide level2">
+<h2>Kegg pathway enrichment</h2>
+
+<img data-src="../results/08_kegg_enrichment.png" class="r-stretch quarto-figure-center"><p class="caption">Kegg_enrich</p></section>
+<section id="kegg-pathway" class="slide level2">
+<h2>Kegg pathway</h2>
+
+<img data-src="../results/08_hsa00140.pathview.png" class="r-stretch quarto-figure-center"><p class="caption">Kegg_path</p></section>
 <section id="analysis" class="slide level2">
 <h2>Analysis</h2>
 </section>
@@ -601,44 +616,6 @@ Luisa Weisch,
         ]
       });
     </script>
-    
-    <script>
-      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
-      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
-      // slide changes (different for each slide format).
-      (function () {
-        // dispatch for htmlwidgets
-        function fireSlideEnter() {
-          const event = window.document.createEvent("Event");
-          event.initEvent("slideenter", true, true);
-          window.document.dispatchEvent(event);
-        }
-
-        function fireSlideChanged(previousSlide, currentSlide) {
-          fireSlideEnter();
-
-          // dispatch for shiny
-          if (window.jQuery) {
-            if (previousSlide) {
-              window.jQuery(previousSlide).trigger("hidden");
-            }
-            if (currentSlide) {
-              window.jQuery(currentSlide).trigger("shown");
-            }
-          }
-        }
-
-        // hookup for slidy
-        if (window.w3c_slidy) {
-          window.w3c_slidy.add_observer(function (slide_num) {
-            // slide_num starts at position 1
-            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
-          });
-        }
-
-      })();
-    </script>
-
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
       const toggleBodyColorMode = (bsSheetEl) => {
