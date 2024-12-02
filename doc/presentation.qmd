@@ -4,10 +4,15 @@ author:
   - Rune Daucke, runda
   - David Faurdal, s144523
   - Luisa Weisch,
-
 format:
   revealjs:
-    theme: dark
+    self-contained: true
+    code-line-numbers: true
+    smaller: true
+    scroll: true
+    theme: moon
+    transition: slide
+editor: visual
 ---
 
 ## Introduction <!-- David -->

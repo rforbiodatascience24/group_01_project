@@ -26,7 +26,7 @@ editor_options:
 library(broom)
 library(tidyverse)
 
-df_long <- read_tsv("data/02_dat_clean.tsv")
+df_long <- read_tsv("../data/02_dat_clean.tsv")
 ```
 
 ```{r}
