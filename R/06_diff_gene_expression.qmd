@@ -67,7 +67,7 @@ df_est <- df_nested_exp |>
 #| fig.height: 6
 
 # Generate volcano plot
-ggplot(df_est, aes(estimate,
+ggplot(df_est, aes(log2(estimate),
                    -log10(p.value),
                    color = is_significant)) +
   geom_hline(yintercept = 0) +

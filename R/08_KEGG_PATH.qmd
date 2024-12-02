@@ -1,0 +1,91 @@
+---
+title: "Kegg Pathway Enrichment"
+author: 
+  - Rune Daucke (runda, s165493)
+  - David Faurdal (dalofa, s144523)
+  - Luisa Weisch (s233028)
+date: 12/02-2024
+format:
+  html:
+    embed-resources: true
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+## Kegg Pathway enrichment
+```{r}
+#| label: load_libraries
+#| eval: TRUE
+#| echo: TRUE
+#| results: hide
+#| message: FALSE
+#| warning: FALSE
+# Load required libraries
+library(tidyverse)
+library(readxl)
+library(clusterProfiler)
+library(org.Hs.eg.db)
+library(ggprism)
+library(scales)
+library(pathview)
+# Source custom functions
+source("../R/99_proj_func.R")
+```
+```{r}
+#| label: Kegg_pathway enrichment
+#| eval: TRUE
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+# Read in the data and classify genes as up or down-regulated
+diff <- read_excel("../data/_raw/PD_DF.xlsx", sheet = 1) %>%
+  mutate(Up_Down = ifelse(Ratio > 0, "Up", "Down")) %>%
+  as_tibble()
+# Filter up-regulated and down-regulated genes
+diff_up <- diff %>%
+  filter(Up_Down == "Up")
+diff_down <- diff %>%
+  filter(Up_Down == "Down")
+# Calls function from R script
+kegg_up <- kegg_analysis(diff_up, Gene_symbol, 0.15)
+kegg_down <- kegg_analysis(diff_down, Gene_symbol, 1) # No results for kegg_down
+```
+```{r}
+#| label: pathway_enrichment_plot
+#| eval: TRUE
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.width: 8
+#| fig.height: 6
+# Visualize the up-regulated KEGG pathways
+ggplot(kegg_up, aes(x = Count, y = reorder(Description, -p.adjust), fill = p.adjust)) +
+  geom_bar(stat = "identity") +
+  scale_fill_gradient(low = "#327EBA", high = "#E06663") +  # Gradient from blue to red
+  xlim(0, 5) +
+  labs(
+    title = "KEGG Pathway Enrichment (Up-regulated)",
+    x = "Protein Count",
+    y = "KEGG Pathway",
+    fill = "-log10 Adjusted P-Value"
+  ) +
+  theme_prism() +
+  theme(
+    plot.title = element_text(hjust = 0.9)  # Move title to the left
+  ) +
+  guides(fill = guide_colorbar(reverse = TRUE)) +  # Flip the color scale in the legend
+  geom_text(aes(label = scientific(p.adjust)), hjust = -0.1, color = "black")  # Format p
+# Extract the pathway ID for "Steroid hormone biosynthesis"
+id_target <- kegg_up %>%
+  filter(grepl("Steroid hormone biosynthesis", Description)) %>%
+  dplyr::select(ID) %>%
+  pull()
+print(id_target)
+# Visualize the "Steroid hormone biosynthesis" KEGG pathway
+# This will give the error:
+# Error in .External2(C_X11, paste0("png::", filename), g$width, g$height,  : 
+#   unable to start device PNG
+# This is not a code error, but a server limitation
+# It will generate the original pathway, but not the highlighted
+pathview(gene.data = top_genes_entrez$ENTREZID, pathway.id = id_target, species = "hsa")
+```
