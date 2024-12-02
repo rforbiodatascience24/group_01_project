@@ -3,7 +3,7 @@ title: "Group 01 project: Analysis of Gene Expression in Parkinsson Disease"
 author: 
   - Rune Daucke, runda
   - David Faurdal, s144523
-  - Luisa Weisch,
+  - Luisa Weisch, s233028
 format:
   revealjs:
     self-contained: true
@@ -17,13 +17,15 @@ editor: visual
 
 ## Introduction
 
-Gene expression data (Affymetrix platform).
-
-
-Collected from the blood of: 
+Gene expression data (Affymetrix platform). Collected from the blood of: 
 
 - 20 healthy patients
 - 40 patients diagnosed with sporadic Parkinsons disease who have not received drug treatment.
+
+::: {style="background-color: white; padding: 10px; display:"}
+![Box_plot](../results/02_normalization_check.png){width="60%" height="60%"}
+:::
+
 
 ## Cleaning and Filtering Dataset
 
