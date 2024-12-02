@@ -75,11 +75,14 @@ Collected from the blood of: - 20 healthy patients - 40 patients diagnosed with 
 
 ::: columns
 ::: {.column width="50%"}
-::: {style="background-color: white; padding: 10px; display:"} ![ndg_density](../results/07_neurodeg_density.png){width="80%"}
+::: 
+:::{style="background-color: white; padding: 10px; display:"} ![ndg_density](../results/07_neurodeg_density.png){width="80%"}
 :::
-
+:::
 ::: {.column width="50%"}
+:::{style="background-color: white; padding: 10px; display:"}
 ![ndg_boxplot](../results/07_neurodeg_boxplot.png){width="80%"}
+:::
 :::
 :::
 
@@ -89,11 +92,15 @@ Collected from the blood of: - 20 healthy patients - 40 patients diagnosed with 
 
 ::: columns
 ::: {.column width="50%"}
+::: {style="background-color: white; padding: 10px; display:"}
 ![inflam_density](../results/07_inflammatory_density.png){width="80%"}
+:::
 :::
 
 ::: {.column width="50%"}
+::: {style="background-color: white; padding: 10px; display:"}
 ![inflam_boxplot](../results/07_inflammatory_boxplot.png){width="80%"}
+:::
 :::
 :::
 
