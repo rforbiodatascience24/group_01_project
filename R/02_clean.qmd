@@ -81,8 +81,8 @@ gene_names <- map_probe_to_gene(gene_probe_ids)
 colnames(df_conditon_wide)[-c(1, 2)] <- gene_names
 
 # Order the samples according to name
-control_order <- paste("Blood_healthy_control_", 1:20, sep = "")
-pd_order <- paste("Blood_PD_patient_", 1:41, sep = "")
+control_order <- str_c("Blood_healthy_control_", 1:20, sep = "")
+pd_order <- str_c("Blood_PD_patient_", 1:41, sep = "")
 all_samples <- c(control_order, pd_order)
 
 # Reshape data to long format again and apply ordering
