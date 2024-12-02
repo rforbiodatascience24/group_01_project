@@ -12,7 +12,9 @@ editor: visual
 editor_options: 
   chunk_output_type: console
 ---
+
 ## Kegg Pathway enrichment
+
 ```{r}
 #| label: load_libraries
 #| eval: TRUE
@@ -20,6 +22,7 @@ editor_options:
 #| results: hide
 #| message: FALSE
 #| warning: FALSE
+
 # Load required libraries
 library(tidyverse)
 library(readxl)
@@ -28,15 +31,18 @@ library(org.Hs.eg.db)
 library(ggprism)
 library(scales)
 library(pathview)
+
 # Source custom functions
 source("../R/99_proj_func.R")
 ```
+
 ```{r}
 #| label: Kegg_pathway enrichment
 #| eval: TRUE
 #| echo: TRUE
 #| message: FALSE
 #| warning: FALSE
+
 # Read in the data and classify genes as up or down-regulated
 diff <- read_excel("../data/_raw/PD_DF.xlsx", sheet = 1) %>%
   mutate(Up_Down = ifelse(Ratio > 0, "Up", "Down")) %>%
@@ -50,6 +56,7 @@ diff_down <- diff %>%
 kegg_up <- kegg_analysis(diff_up, Gene_symbol, 0.15)
 kegg_down <- kegg_analysis(diff_down, Gene_symbol, 1) # No results for kegg_down
 ```
+
 ```{r}
 #| label: pathway_enrichment_plot
 #| eval: TRUE
@@ -58,6 +65,7 @@ kegg_down <- kegg_analysis(diff_down, Gene_symbol, 1) # No results for kegg_down
 #| warning: FALSE
 #| fig.width: 8
 #| fig.height: 6
+
 # Visualize the up-regulated KEGG pathways
 ggplot(kegg_up, aes(x = Count, y = reorder(Description, -p.adjust), fill = p.adjust)) +
   geom_bar(stat = "identity") +

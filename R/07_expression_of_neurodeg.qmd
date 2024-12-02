@@ -1,11 +1,18 @@
 ---
+
+---
 title: "Analysis 1 - Expression in Gene Sets"
 author: 
-  - Rune Daucke 
-  - David Faurdal
-  - Luisa Weisch
-format: html
+  - Rune Daucke (runda, s165493)
+  - David Faurdal (dalofa, s144523)
+  - Luisa Weisch (s233028)
+date: 12/02-2024
+format:
+  html:
+    embed-resources: true
 editor: visual
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Expression in Gene Sets
@@ -21,7 +28,6 @@ editor: visual
 #| warning: FALSE
 
 library(tidyverse)
-#library(hrbrthemes)
 library(viridis)
 library(ggplot2)
 ```

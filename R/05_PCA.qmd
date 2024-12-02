@@ -27,24 +27,20 @@ library(tidyverse)
 library(ggprism)
 
 df <- read_tsv("../data/02_dat_clean.tsv")
-
-
-
-
-
-
 ```
 
 ```{r}
+#| label: create_pca
+#| eval: TRUE
+#| echo: TRUE
+#| results: hide
+#| message: FALSE
+#| warning: FALSE
 
 df_wider <- df %>%
   pivot_wider(
     names_from = Gene,
-    values_from = Expression
-  )
-
-
-
+    values_from = Expression)
 
 # Normalize - Center data
 data_scaled <- apply(df_wider[, c(3:ncol(df_wider))], 2, function(x) (x - mean(x)) / sd(x))
@@ -57,7 +53,6 @@ loadings <- prcomp(data_scaled,
                    center = TRUE,
                    scale. = TRUE) %>%
                    .$rotation
-
 
 # Convert loadings to a tibble for tidyverse manipulation
 loadings_tibble <- as_tibble(loadings, rownames = "Genes")
@@ -83,7 +78,16 @@ for (i in seq_along(variance_explained)) {
     PC[i] <- round(variance_explained[i] * 100, 2) - sum(PC[1:(i - 1)])
   }
 }
+```
 
+```{r}
+#| label: pca_plot
+#| eval: TRUE
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.width: 8
+#| fig.height: 6
 
 # Plotting the PCA
 ggplot(pca_data, aes(x = PC1, y = PC2, color = Condition)) +
@@ -91,10 +95,9 @@ ggplot(pca_data, aes(x = PC1, y = PC2, color = Condition)) +
   geom_pointrange(data = pca_data_summary, aes(xmin = PC1 - sd_PC1, xmax = PC1 + sd_PC1), shape = 22, size = 2) +
   geom_pointrange(data = pca_data_summary, aes(ymin = PC2 - sd_PC2, ymax = PC2 + sd_PC2), shape = 22, size = 2) +
   theme_prism(border = TRUE, base_rect_size = 2) +
-  #scale_color_manual(values = myColors[c(1, 4, 7)]) +
   labs(x = paste("PC1 (", PC[1], "%)", sep = ""),
        y = paste("PC2 (", PC[2], "%)", sep = "")) +
-theme(legend.position = "none",
+theme(legend.position = "right",
         panel.background = element_rect(fill='transparent'), 
         plot.background = element_rect(fill='transparent', color=NA),
         panel.grid.major = element_blank(),
@@ -112,12 +115,5 @@ theme(legend.position = "none",
         legend.key.size = unit(3, "lines"),
         strip.text = element_text(size = 20))
 
-
-
-
-
-
-
-
-
+ggsave("../results/PCA_plot.png", width = 8, height = 6, dpi = 600)
 ```
