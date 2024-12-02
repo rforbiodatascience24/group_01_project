@@ -1,0 +1,84 @@
+---
+title: "augmentation"
+author: 
+  - Rune Daucke 
+  - David Faurdal
+  - Luisa Weisch
+editor: visual
+---
+
+## Load libraries and data
+
+```{r}
+#| label: load_libraries
+#| eval: TRUE
+#| echo: TRUE
+#| results: hide
+#| message: FALSE
+#| warning: FALSE
+library(tidyverse)
+library(viridis)
+source("99_proj_func.R")
+```
+
+```{r}
+#| label: fit lm models
+#| eval: TRUE
+#| echo: TRUE
+#| results: hide
+#| message: FALSE
+#| warning: FALSE
+df <- read_tsv("../data/02_dat_clean.tsv")
+all_genes <- colnames(df) %>% .[- c(1,2,3)]
+
+```
+
+## Calculating the Mean Expression for Specific Gene Sets
+
+### Neurodegernerative gene set
+
+Calculating the mean of the expression of genes which are part of neurodegeneration. Gene list from: https://pmc.ncbi.nlm.nih.gov/articles/PMC3044594/#:\~:text=Mutations%20in%206%20genes%20(SNCA,shown%20to%20cause%20familial%20parkinsonism.
+
+```{r}
+#| label: Extract values for ndg genes
+#| eval: TRUE
+#| echo: TRUE
+#| results: hide
+#| message: FALSE
+#| warning: FALSE
+# Neurodegenerative-associated genes
+ndg_list <- c("SNCA", "LRRK2", "PRKN", "DJ1", "PINK1", "ATP13A2")
+
+present_genes <- find_genes(ndg_list, all_genes)
+df$ndg_mean <- rowMeans(df[present_genes], na.rm = TRUE)
+
+# print(c("Number of present genes:", length(present_genes)))
+# df$ndg_mean
+```
+
+### Inflamation gene set
+
+Next we look at another set of genes which play a role in inflammation. The aim here is to determine whether inflammation is higher in patients versus controls. Gene list from: https://pmc.ncbi.nlm.nih.gov/articles/PMC4955784/#:\~:text=Through%20gene%20expression%20microarray%20analysis,%2C%20Il1rn%2C%20Saa3%2C%20Emr1%2C
+
+```{r}
+#| label: Extract values for inflammatory genes
+#| eval: TRUE
+#| echo: TRUE
+#| results: hide
+#| message: FALSE
+#| warning: FALSE
+#| 
+# inflammation index
+#inflam_list <- c("IL6", "TNF", "IL1B", "CXCL10")
+inflam_list <- c("IL1rn", "TNF", "Saa3", "Emr1", "Adam8", "Itgam")
+
+present_genes <- find_genes(inflam_list, all_genes)
+df$inflam_mean <- rowMeans(df[present_genes], na.rm = TRUE)
+
+```
+
+# Saving augmented .tsv file
+
+```{r}
+write_tsv(x = df, file="../data/03_dat_aug.tsv")
+```
