@@ -45,6 +45,29 @@ Collected from the blood of: - 20 healthy patients - 40 patients diagnosed with 
 :::
 
 ## Results - Diff. Expression of known biomarkers <!-- Luisa -->
+### Neurodegenerative-associated genes
+::: columns
+::: {.column width="50%"}
+::: {style="background-color: white; padding: 10px; display:"} ![ndg_density](../results/07_neurodeg_density.png){width="80%"}
+:::
+
+::: {.column width="50%"}
+::: {style="background-color: white; padding: 10px; display:"} ![ndg_boxplot](../results/07_neurodeg_boxplot.png){width="80%"}
+:::
+:::
+
+## Results - Diff. Expression of known biomarkers <!-- Luisa -->
+### Pro-inflammatory genes
+::: columns
+::: {.column width="50%"}
+::: {style="background-color: white; padding: 10px; display:"} ![ndg_density](../results/07_neurodeg_density.png){width="80%"}
+:::
+
+::: {.column width="50%"}
+::: {style="background-color: white; padding: 10px; display:"} ![ndg_boxplot](../results/07_neurodeg_boxplot.png){width="80%"}
+:::
+:::
+
 
 ## Kegg enrichment
 
@@ -57,7 +80,6 @@ Collected from the blood of: - 20 healthy patients - 40 patients diagnosed with 
 ::: {style="background-color: white; display:"}
 ![kegg_pathway](../results/08_hsa00140.pathview.png){width="50%" height="50%"}
 :::
-
 
 ## Conclusion <!-- Rune -->
 
