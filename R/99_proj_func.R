@@ -31,3 +31,24 @@ find_genes <- function(gene_set, all_genes){
     unlist()
   return(present_genes)
 }
+
+# Perform kegg pathway enrichment
+kegg_analysis <- function(df, gene_column, p_cutoff) {
+  # Map gene symbols to Entrez IDs
+  gene_entrez <- df %>%
+    pull({{ gene_column }}) %>%
+    bitr(fromType = "SYMBOL", toType = "ENTREZID", OrgDb = org.Hs.eg.db)
+
+  # Perform KEGG enrichment analysis
+  kegg_result <- enrichKEGG(
+    gene = gene_entrez$ENTREZID,
+    organism = "hsa",
+    pvalueCutoff = p_cutoff
+  )
+
+  # Prepare KEGG results for visualization
+  kegg_df <- as.data.frame(kegg_result) %>%
+    arrange(p.adjust)
+
+  return(kegg_df)
+}

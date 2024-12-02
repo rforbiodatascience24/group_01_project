@@ -89,11 +89,14 @@ id_target <- kegg_up %>%
   dplyr::select(ID) %>%
   pull()
 print(id_target)
+
 # Visualize the "Steroid hormone biosynthesis" KEGG pathway
+
+#pathview(gene.data = top_genes_entrez$ENTREZID, pathway.id = id_target, species = "hsa")
+
 # This will give the error:
 # Error in .External2(C_X11, paste0("png::", filename), g$width, g$height,  : 
 #   unable to start device PNG
 # This is not a code error, but a server limitation
 # It will generate the original pathway, but not the highlighted
-pathview(gene.data = top_genes_entrez$ENTREZID, pathway.id = id_target, species = "hsa")
 ```

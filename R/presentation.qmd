@@ -10,6 +10,12 @@ format:
     theme: dark
 ---
 
+```{r}
+library(imager)
+library(grid)
+```
+
+
 ## Introduction
 
 Gene expression data from blood samples collected using the affymetrix microarray platform. - 20 healthy patients (control) - 40 patients dianosed with sporadic Parkinsons Disease, who have yet to recieve drug treatment.
@@ -26,6 +32,14 @@ Gene expression data from blood samples collected using the affymetrix microarra
     -   Differential Expression of known biomarker gene
 
 ## PCA
+
+```{r}
+# Load the image
+pca <- load.image("../results/PCA_plot.png")
+
+# Display the image without re-plotting
+grid.raster(pca)
+```
 
 ## Diff. Expression
 
