@@ -1,0 +1,195 @@
+---
+title: "PCA Plot"
+author: 
+  - Rune Daucke (runda, s165493)
+  - David Faurdal (dalofa, s144523)
+  - Luisa Weisch (s233028)
+date: 12/02-2024
+format:
+  html:
+    embed-resources: true
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+## PCA
+
+```{r}
+#| label: load_libraries_PCA
+#| eval: TRUE
+#| echo: TRUE
+#| results: hide
+#| message: FALSE
+#| warning: FALSE
+
+library(tidyverse)
+library(ggprism)
+
+df <- read_tsv("../data/02_dat_clean.tsv")
+
+
+
+
+
+
+```
+
+```{r}
+
+df_wider <- df %>%
+  pivot_wider(
+    names_from = Gene,
+    values_from = Expression
+  )
+
+
+
+
+# Normalize - Center data
+data_scaled <- apply(df_wider[, c(3:ncol(df_wider))], 2, function(x) (x - mean(x)) / sd(x))
+
+PCA_data <- prcomp(t(data_scaled),
+                   center = TRUE,
+                   scale. = TRUE) 
+
+loadings <- prcomp(data_scaled,
+                   center = TRUE,
+                   scale. = TRUE) %>%
+                   .$rotation
+
+
+# Convert loadings to a tibble for tidyverse manipulation
+loadings_tibble <- as_tibble(loadings, rownames = "Genes")
+
+pca_data <- PCA_data$rotation %>% as.data.frame() %>%
+  mutate(Condition = df_wider$Condition) 
+
+pca_data_summary <- pca_data %>% 
+  group_by(Condition) %>% 
+  summarise(sd_PC1 = sd(PC1),
+            PC1 = mean(PC1),
+            sd_PC2 = sd(PC2),
+            PC2 = mean(PC2))
+
+# Calculate the percentage of variance explained by each PC
+variance_explained <- summary(PCA_data)$importance[3, ]
+PC <- numeric(length(variance_explained))
+
+for (i in seq_along(variance_explained)) {
+  if (i == 1) {
+    PC[i] <- round(variance_explained[i] * 100, 2)
+  } else {
+    PC[i] <- round(variance_explained[i] * 100, 2) - sum(PC[1:(i - 1)])
+  }
+}
+
+
+# Plotting the PCA
+ggplot(pca_data, aes(x = PC1, y = PC2, color = Condition)) +
+  geom_point(size = 3) +
+  geom_pointrange(data = pca_data_summary, aes(xmin = PC1 - sd_PC1, xmax = PC1 + sd_PC1), shape = 22, size = 2) +
+  geom_pointrange(data = pca_data_summary, aes(ymin = PC2 - sd_PC2, ymax = PC2 + sd_PC2), shape = 22, size = 2) +
+  theme_prism(border = TRUE, base_rect_size = 2) +
+  #scale_color_manual(values = myColors[c(1, 4, 7)]) +
+  labs(x = paste("PC1 (", PC[1], "%)", sep = ""),
+       y = paste("PC2 (", PC[2], "%)", sep = "")) +
+theme(legend.position = "none",
+        panel.background = element_rect(fill='transparent'), 
+        plot.background = element_rect(fill='transparent', color=NA),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.background = element_rect(fill='transparent'),
+        legend.box.background = element_rect(fill='transparent'),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16),
+        axis.text = element_text(size = 20),
+        plot.title = element_text(size = 20, face = "bold"),
+        legend.title = element_text(size = 24),
+        legend.text = element_text(size = 20),
+        legend.key.size = unit(3, "lines"),
+        strip.text = element_text(size = 20))
+
+
+
+
+
+
+
+
+
+```
+
+```{r}
+
+library(ggrepel)
+
+
+
+
+# Select the top 10 proteins based on loadings for PC1 and PC2
+top_pc1_proteins <- loadings_tibble %>%
+  mutate(abs_PC1 = abs(PC1)) %>%
+  slice_max(order_by = abs_PC1, n = 10)
+
+top_pc2_proteins <- loadings_tibble %>%
+  mutate(abs_PC2 = abs(PC2)) %>%
+  slice_max(order_by = abs_PC2, n = 10)
+
+# Combine the top PC1 and PC2 proteins (without duplicates)
+top_proteins <- bind_rows(top_pc1_proteins, top_pc2_proteins) %>%
+  distinct(Genes, .keep_all = TRUE)  # Remove duplicates if any
+
+# Add a color column to indicate whether it's PC1 or PC2 for coloring the vectors
+loadings_scaled <- top_proteins %>%
+  mutate(PC1 = PC1 * 5,
+         PC2 = PC2 * 5) %>%
+  mutate(PC_color = ifelse(row_number() <= 10, "PC1", "PC2"))
+
+# Plotting the PCA with protein loadings labels and vectors
+ggplot() +
+  # Layer for points with Grade color mapping
+  geom_point(data = pca_data, aes(x = PC1, y = PC2, color = Condition), size = 3) +
+  # Layer for text labels for top proteins
+  geom_text_repel(data = loadings_scaled, 
+                  aes(x = PC1, y = PC2, label = Genes), 
+                  size = 5, 
+                  box.padding = 0.5, 
+                  point.padding = 0.5,
+                  max.overlaps = 100) +
+  # Layer for loading vectors with PC_color
+  geom_segment(data = loadings_scaled, 
+               aes(x = 0, y = 0, xend = PC1, yend = PC2, color = PC_color), 
+               arrow = arrow(type = "closed", length = unit(0.2, "inches")), 
+               size = 1) +
+  theme_prism(border = TRUE, base_rect_size = 2) +
+  theme(legend.position = "bottom",
+        panel.background = element_rect(fill = 'transparent'), 
+        plot.background = element_rect(fill = 'transparent', color = NA),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.background = element_rect(fill = 'transparent'),
+        legend.box.background = element_rect(fill = 'transparent'),
+        axis.title.x = element_text(size = 20),
+        axis.title.y = element_text(size = 20),
+        axis.text.x = element_text(size = 16),
+        axis.text.y = element_text(size = 16),
+        axis.text = element_text(size = 20),
+        plot.title = element_text(size = 20, face = "bold"),
+        #legend.title = element_text(size = 24),
+        legend.text = element_text(size = 20),
+        legend.key.size = unit(3, "lines"),
+        strip.text = element_text(size = 20)) +
+  labs(x = paste("PC1 (", PC[1], "%)", sep = ""),
+       y = paste("PC2 (", PC[2], "%)", sep = ""))
+
+
+
+
+
+
+
+
+```

@@ -46,7 +46,7 @@ df |>
   )
 ```
 
-If we plot the distribution of gene expression values as boxplots per sample we can see that they have similar expression distributions and do not need to be normalized.
+If we plot the distribution of gene expression values as boxplots per sample we can see that they have similar expression distributions and thus do not need to be normalized.
 ```{r}
 #| label: normalization_check_plot
 #| eval: TRUE
