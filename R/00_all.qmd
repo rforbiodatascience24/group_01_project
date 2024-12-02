@@ -32,3 +32,5 @@ library(rmarkdown)
 {{< include 05_PCA.qmd >}}
 
 {{< include 06_diff_gene_expression.qmd >}}
+
+{{< include 07_expression_of_neurodeg.qmd >}}

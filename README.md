@@ -14,7 +14,7 @@ The data can be downloaded from the NCBI Gene Expression Omnibus under the acces
 To render the entire analysis document run the following in the terminal
 
 ```
-quarto render R/00_all.qmd output /results/00_all.qmd
+quarto render R/00_all.qmd --output-dir ../results/00_all.qmd
 
 ```
 

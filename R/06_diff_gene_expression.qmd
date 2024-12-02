@@ -26,7 +26,7 @@ editor_options:
 library(broom)
 library(tidyverse)
 
-df_long <- read_tsv("../data/02_dat_clean.tsv")
+df_long <- read_tsv("data/02_dat_clean.tsv")
 ```
 
 ```{r}
@@ -67,7 +67,9 @@ df_est <- df_nested_exp |>
 #| fig.height: 6
 
 # Generate volcano plot
-ggplot(df_est, aes(estimate, -log10(p.value), color = is_significant)) +
+ggplot(df_est, aes(estimate,
+                   -log10(p.value),
+                   color = is_significant)) +
   geom_hline(yintercept = 0) +
   geom_point(alpha = .5) +
   ggrepel::geom_text_repel(data = filter(df_est, is_significant == "Yes"),
