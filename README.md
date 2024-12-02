@@ -18,4 +18,7 @@ for quarto_file in R/*.qmd; do quarto render $quarto_file --output-dir ../result
 
 ```
 
+# Presentation
 
+A direct link to the presentation can be found here:
+https://raw.githack.com/rforbiodatascience24/group_01_project/main/doc/presentation.html
