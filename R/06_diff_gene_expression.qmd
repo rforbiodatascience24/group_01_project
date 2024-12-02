@@ -87,6 +87,8 @@ ggplot(df_est, aes(estimate, -log10(p.value), color = is_significant)) +
     plot.title = element_text(hjust = 1),
     plot.subtitle = element_text(hjust = 1))
 
+ggsave("../results/06_Volcano_plot_gene_exp.png", width = 8, height = 6, dpi = 600)
+
 ```
 
 Using this approach, that is fitting linear models to the genes, no genes are identified as being differential expressed (at least not significantly).

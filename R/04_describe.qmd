@@ -12,11 +12,13 @@ editor: visual
 editor_options: 
   chunk_output_type: console
 ---
+
 ### Data Description
 
 The data used in this project is comprised of Affymetrix microarray gene expression measurements collected from the blood of 20 healthy individuals and 40 patients diagnosed with sporadic Parkinsons Disease. Imporantly, the data was collected before patients started drug treatment.
 
 After cleaning, the data set is comprised of the expression value for 22215 distinct genes:
+
 ```{r}
 #| label: distinct_genes
 #| eval: TRUE
@@ -31,6 +33,7 @@ df |>
 ```
 
 The summary statistics of expression across genes are as follows:
+
 ```{r}
 #| label: summary_statistics
 #| eval: TRUE
@@ -47,6 +50,7 @@ df |>
 ```
 
 If we plot the distribution of gene expression values as boxplots per sample we can see that they have similar expression distributions and thus do not need to be normalized.
+
 ```{r}
 #| label: normalization_check_plot
 #| eval: TRUE
@@ -65,9 +69,3 @@ ggplot(df, aes(x = Sample, y = Expression, fill = Condition)) +
 
 ggsave("../results/02_normalization_check.png", width = 8, height = 6, dpi = 600)
 ```
-
-
-
-
-
-

@@ -10,3 +10,12 @@ A R4BDS exam project
 This repository contains the code necessary to download, clean and analyze the data published in the paper "Blood transcriptomics of drug-naïve sporadic Parkinson's disease patients" by Calligaris et al 2015, DOI: 10.1186/s12864-015-2058-3.
 
 The data can be downloaded from the NCBI Gene Expression Omnibus under the accession GSE72267 but programmatic retreival of the data is inceluded in the 01_load.qmd script.
+
+To render the entire analysis document run the following in the terminal
+
+```
+quarto render R/00_all.qmd output /results/00_all.qmd
+
+```
+
+

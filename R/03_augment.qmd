@@ -10,7 +10,7 @@ editor: visual
 ## Load libraries and data
 
 ```{r}
-#| label: load_libraries
+#| label: load_libraries_augment
 #| eval: TRUE
 #| echo: TRUE
 #| results: hide
@@ -22,7 +22,7 @@ source("99_proj_func.R")
 ```
 
 ```{r}
-#| label: fit lm models
+#| label: load_tibble
 #| eval: TRUE
 #| echo: TRUE
 #| results: hide
