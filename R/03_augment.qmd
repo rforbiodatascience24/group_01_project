@@ -29,7 +29,16 @@ source("99_proj_func.R")
 #| message: FALSE
 #| warning: FALSE
 df <- read_tsv("../data/02_dat_clean.tsv")
-all_genes <- colnames(df) %>% .[- c(1,2,3)]
+
+df_wide <- df %>%
+  pivot_wider(
+    names_from=Gene,
+    values_from=Expression
+  )
+
+all_genes <- colnames(df_wide) %>% 
+  .[- c(1,2)]
+
 
 ```
 
@@ -50,7 +59,7 @@ Calculating the mean of the expression of genes which are part of neurodegenerat
 ndg_list <- c("SNCA", "LRRK2", "PRKN", "DJ1", "PINK1", "ATP13A2")
 
 present_genes <- find_genes(ndg_list, all_genes)
-df$ndg_mean <- rowMeans(df[present_genes], na.rm = TRUE)
+df_wide$ndg_mean <- rowMeans(df_wide[present_genes], na.rm = TRUE)
 
 # print(c("Number of present genes:", length(present_genes)))
 # df$ndg_mean
@@ -73,12 +82,12 @@ Next we look at another set of genes which play a role in inflammation. The aim 
 inflam_list <- c("IL1rn", "TNF", "Saa3", "Emr1", "Adam8", "Itgam")
 
 present_genes <- find_genes(inflam_list, all_genes)
-df$inflam_mean <- rowMeans(df[present_genes], na.rm = TRUE)
+df_wide$inflam_mean <- rowMeans(df_wide[present_genes], na.rm = TRUE)
 
 ```
 
 # Saving augmented .tsv file
 
 ```{r}
-write_tsv(x = df, file="../data/03_dat_aug.tsv")
+write_tsv(x = df_wide, file="../data/03_dat_aug.tsv")
 ```
